@@ -33,6 +33,17 @@ namespace PagamentoAPI.Controllers
             return await _context.Servico.ToListAsync();
         }
 
+        [HttpPost("PegarServicosMecanico")]
+        public async Task<ActionResult<IEnumerable<CadastrarServicos>>> PegarServicosMecanico([FromBody] int id)
+        {
+
+            var consulta = _context.ServicosMecanico.Where(x => x.IdCadastro == id);
+
+            var resultado = consulta.ToListAsync();
+
+            return await resultado;
+        }
+
         [HttpPost("Cadastrar")]
         public async Task<Cadastro> Cadastrar(Cadastro cadastro)
         {
@@ -74,16 +85,6 @@ namespace PagamentoAPI.Controllers
 
         }
 
-        //[HttpPost("SetTipoCadastro")]
-        //public void Task<Cadastro> SetTipoCadastro(int id)
-        //{
-
-        //    var consulta = _context.Cadastro.Where(p => p.Email == login.Email && p.Senha == login.Senha);
-
-        //    var resultado = consulta.FirstOrDefault();
-
-        //}
-
         [HttpPost("SetTipoCadastroCliente")]
         public async Task<IActionResult> SetTipoCadastroCliente(TipoCadastro tipo)
         {
@@ -121,6 +122,44 @@ namespace PagamentoAPI.Controllers
             }
 
             return Ok("Servicos já foram cadastrados!");
+        }
+
+        [HttpPost("CadastrarPrecoServicosMecanico")]
+        public async Task<IActionResult> CadastrarPrecoServicosMecanico(CadastrarServicos[] servicos)
+        {
+
+                var consulta = _context.ServicosMecanico.Where(x => x.IdCadastro == servicos[0].IdCadastro);
+
+                var resultado = consulta.ToListAsync().Result;
+
+                var i = 0;
+
+              
+                    foreach (var item in resultado)
+                    {
+
+                        foreach (var servico in servicos)
+                        {
+
+                            var verificacao = servico.Servico == item.Servico;
+
+                            if (verificacao)
+                            {
+                                item.Valor = servico.Valor;
+
+                                _context.Entry(resultado[i]).State = EntityState.Modified;
+
+                                await _context.SaveChangesAsync();
+
+                                i++;
+                            }
+
+                        
+                        }
+                    }
+
+
+            return Ok();
         }
 
         //[HttpPost("SetTipoCadastroCliente")]

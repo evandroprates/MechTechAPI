@@ -10,6 +10,6 @@ namespace MechTechAPI.Models
         public int Id { get; set; }
         public int IdCadastro { get; set; }
         public string Servico { get; set; }
-        public string Valor { get; set; }
+        public double Valor { get; set; }
     }
 }
