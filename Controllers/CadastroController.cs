@@ -62,7 +62,6 @@ namespace PagamentoAPI.Controllers
             }
 
 
-
             //return Ok();
         }
 
